@@ -1,2 +1,2 @@
 # misc_gis_scripts
-Scripts I use for data processing
+Collection of miscellaneous GIS scripts I use/have written over the years.  Standard disclaimers apply.  They might be ugly, but they work ;)
