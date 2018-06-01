@@ -5,11 +5,11 @@ shopt -s extglob
 set -x #echo on for debugging (comment to disable)
 
 # Database and server information
-DBHOST=$PGHOST
-GEONAMESDB="geonames"
+DBHOST=""
+GEONAMESDB=""
 
 # Don't whine to me about security, do it differently if you want
-#export PGPASSWORD=""
+export PGPASSWORD=""
 
 # Source directory
 BASEDIR=$(dirname "${BASH_SOURCE[0]}")
@@ -20,23 +20,23 @@ PSQL="/usr/bin/psql -q"
 UNZIP="/usr/bin/unzip"
 
 # Download the files we need.
-#$WGET http://download.geonames.org/export/dump/allCountries.zip
-#$WGET http://download.geonames.org/export/dump/featureCodes_en.txt
-#$WGET http://download.geonames.org/export/dump/alternateNames.zip
-#$WGET http://download.geonames.org/export/dump/admin1CodesASCII.txt
-#$WGET http://download.geonames.org/export/dump/admin2Codes.txt
-#$WGET http://download.geonames.org/export/dump/adminCode5.zip
-#$WGET http://download.geonames.org/export/dump/countryInfo.txt
-#$WGET http://download.geonames.org/export/dump/hierarchy.zip
-#$WGET http://download.geonames.org/export/dump/timeZones.txt
-#$WGET http://download.geonames.org/export/dump/userTags.zip
+$WGET http://download.geonames.org/export/dump/allCountries.zip
+$WGET http://download.geonames.org/export/dump/featureCodes_en.txt
+$WGET http://download.geonames.org/export/dump/alternateNames.zip
+$WGET http://download.geonames.org/export/dump/admin1CodesASCII.txt
+$WGET http://download.geonames.org/export/dump/admin2Codes.txt
+$WGET http://download.geonames.org/export/dump/adminCode5.zip
+$WGET http://download.geonames.org/export/dump/countryInfo.txt
+$WGET http://download.geonames.org/export/dump/hierarchy.zip
+$WGET http://download.geonames.org/export/dump/timeZones.txt
+$WGET http://download.geonames.org/export/dump/userTags.zip
 
 # Unzip them
-#$UNZIP allCountries.zip
-#$UNZIP alternateNames.zip
-#$UNZIP adminCode5.zip
-#$UNZIP hierarchy.zip
-#$UNZIP userTags.zip
+$UNZIP allCountries.zip
+$UNZIP alternateNames.zip
+$UNZIP adminCode5.zip
+$UNZIP hierarchy.zip
+$UNZIP userTags.zip
 
 # Make the tables
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -f "$BASEDIR/create_tables.sql"
@@ -50,6 +50,7 @@ $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "update geoname SET the_geom = ST_P
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "create index geoname_the_geom_gist_idx on geoname using gist (the_geom);"
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "create index geoname_geonameid_idx on geoname(geonameid);"
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "create index geoname_name_idx on geoname(name);"
+$PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "create index geoname_fclass_idx on geoname(fclass);"
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "vacuum analyze geoname;"
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "cluster geoname using geoname_the_geom_gist_idx;"
 $PSQL --host=$DBHOST --dbname=$GEONAMESDB -c "analyze geoname;"
