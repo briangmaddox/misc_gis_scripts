@@ -28,7 +28,7 @@ alternatename VARCHAR(400),
 ispreferredname BOOLEAN,
 isshortname BOOLEAN,
 iscolloquial BOOLEAN,
-iscistoric BOOLEAN
+ishistoric BOOLEAN
 );
 
 
