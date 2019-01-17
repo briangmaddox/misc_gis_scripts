@@ -72,66 +72,66 @@ mkdir 78_US_Virgin_Islands_$DIREXTENSION
 
 echo "Moving files to state directories"
 
-mv tl_2017_01* 01_Alabama_$DIREXTENSION
-mv tl_2017_02* 02_Alaska_$DIREXTENSION
-mv tl_2017_04* 04_Arizona_$DIREXTENSION
-mv tl_2017_05* 05_Arkansas_$DIREXTENSION
-mv tl_2017_06* 06_California_$DIREXTENSION
-mv tl_2017_08* 08_Colorado_$DIREXTENSION
-mv tl_2017_09* 09_Connecticut_$DIREXTENSION
-mv tl_2017_10* 10_Delaware_$DIREXTENSION
-mv tl_2017_11* 11_District_of_Columbia_$DIREXTENSION
-mv tl_2017_12* 12_Florida_$DIREXTENSION
-mv tl_2017_13* 13_Georgia_$DIREXTENSION
-mv tl_2017_15* 15_Hawaii_$DIREXTENSION
-mv tl_2017_16* 16_Idaho_$DIREXTENSION
-mv tl_2017_17* 17_Illinois_$DIREXTENSION
-mv tl_2017_18* 18_Indiana_$DIREXTENSION
-mv tl_2017_19* 19_Iowa_$DIREXTENSION
-mv tl_2017_20* 20_Kansas_$DIREXTENSION
-mv tl_2017_21* 21_Kentucky_$DIREXTENSION
-mv tl_2017_22* 22_Louisiana_$DIREXTENSION
-mv tl_2017_23* 23_Maine_$DIREXTENSION
-mv tl_2017_24* 24_Maryland_$DIREXTENSION
-mv tl_2017_25* 25_Massachusetts_$DIREXTENSION
-mv tl_2017_26* 26_Michigan_$DIREXTENSION
-mv tl_2017_27* 27_Minnesota_$DIREXTENSION
-mv tl_2017_28* 28_Mississippi_$DIREXTENSION
-mv tl_2017_29* 29_Missouri_$DIREXTENSION
-mv tl_2017_30* 30_Montana_$DIREXTENSION
-mv tl_2017_31* 31_Nebraska_$DIREXTENSION
-mv tl_2017_32* 32_Nevada_$DIREXTENSION
-mv tl_2017_33* 33_New_Hampshire_$DIREXTENSION
-mv tl_2017_34* 34_New_Jersey_$DIREXTENSION
-mv tl_2017_35* 35_New_Mexico_$DIREXTENSION
-mv tl_2017_36* 36_New_York_$DIREXTENSION
-mv tl_2017_37* 37_North_Carolina_$DIREXTENSION
-mv tl_2017_38* 38_North_Dakota_$DIREXTENSION
-mv tl_2017_39* 39_Ohio_$DIREXTENSION
-mv tl_2017_40* 40_Oklahoma_$DIREXTENSION
-mv tl_2017_41* 41_Oregon_$DIREXTENSION
-mv tl_2017_42* 42_Pennsylvania_$DIREXTENSION
-mv tl_2017_44* 44_Rhode_Island_$DIREXTENSION
-mv tl_2017_45* 45_South_Carolina_$DIREXTENSION
-mv tl_2017_46* 46_South_Dakota_$DIREXTENSION
-mv tl_2017_47* 47_Tennessee_$DIREXTENSION
-mv tl_2017_48* 48_Texas_$DIREXTENSION
-mv tl_2017_49* 49_Utah_$DIREXTENSION
-mv tl_2017_50* 50_Vermont_$DIREXTENSION
-mv tl_2017_51* 51_Virginia_$DIREXTENSION
-mv tl_2017_53* 53_Washington_$DIREXTENSION
-mv tl_2017_54* 54_West_Virginia_$DIREXTENSION
-mv tl_2017_55* 55_Wisconsin_$DIREXTENSION
-mv tl_2017_56* 56_Wyoming_$DIREXTENSION
-mv tl_2017_60* 60_American_Samoa_$DIREXTENSION
-mv tl_2017_64* 64_Federated_States_of_Micronesia_$DIREXTENSION
-mv tl_2017_66* 66_Guam_$DIREXTENSION
-mv tl_2017_68* 68_Marshall_Islands_$DIREXTENSION
-mv tl_2017_69* 69_Commonwealth_of_the_Northern_Mariana_Islands_$DIREXTENSION
-mv tl_2017_70* 70_Palau_$DIREXTENSION
-mv tl_2017_72* 72_Puerto_Rico_$DIREXTENSION
-mv tl_2017_74* 74_US_Minor_Outlying_Islands_$DIREXTENSION
-mv tl_2017_78* 78_US_Virgin_Islands_$DIREXTENSION
+mv tl_2018_01* 01_Alabama_$DIREXTENSION
+mv tl_2018_02* 02_Alaska_$DIREXTENSION
+mv tl_2018_04* 04_Arizona_$DIREXTENSION
+mv tl_2018_05* 05_Arkansas_$DIREXTENSION
+mv tl_2018_06* 06_California_$DIREXTENSION
+mv tl_2018_08* 08_Colorado_$DIREXTENSION
+mv tl_2018_09* 09_Connecticut_$DIREXTENSION
+mv tl_2018_10* 10_Delaware_$DIREXTENSION
+mv tl_2018_11* 11_District_of_Columbia_$DIREXTENSION
+mv tl_2018_12* 12_Florida_$DIREXTENSION
+mv tl_2018_13* 13_Georgia_$DIREXTENSION
+mv tl_2018_15* 15_Hawaii_$DIREXTENSION
+mv tl_2018_16* 16_Idaho_$DIREXTENSION
+mv tl_2018_17* 17_Illinois_$DIREXTENSION
+mv tl_2018_18* 18_Indiana_$DIREXTENSION
+mv tl_2018_19* 19_Iowa_$DIREXTENSION
+mv tl_2018_20* 20_Kansas_$DIREXTENSION
+mv tl_2018_21* 21_Kentucky_$DIREXTENSION
+mv tl_2018_22* 22_Louisiana_$DIREXTENSION
+mv tl_2018_23* 23_Maine_$DIREXTENSION
+mv tl_2018_24* 24_Maryland_$DIREXTENSION
+mv tl_2018_25* 25_Massachusetts_$DIREXTENSION
+mv tl_2018_26* 26_Michigan_$DIREXTENSION
+mv tl_2018_27* 27_Minnesota_$DIREXTENSION
+mv tl_2018_28* 28_Mississippi_$DIREXTENSION
+mv tl_2018_29* 29_Missouri_$DIREXTENSION
+mv tl_2018_30* 30_Montana_$DIREXTENSION
+mv tl_2018_31* 31_Nebraska_$DIREXTENSION
+mv tl_2018_32* 32_Nevada_$DIREXTENSION
+mv tl_2018_33* 33_New_Hampshire_$DIREXTENSION
+mv tl_2018_34* 34_New_Jersey_$DIREXTENSION
+mv tl_2018_35* 35_New_Mexico_$DIREXTENSION
+mv tl_2018_36* 36_New_York_$DIREXTENSION
+mv tl_2018_37* 37_North_Carolina_$DIREXTENSION
+mv tl_2018_38* 38_North_Dakota_$DIREXTENSION
+mv tl_2018_39* 39_Ohio_$DIREXTENSION
+mv tl_2018_40* 40_Oklahoma_$DIREXTENSION
+mv tl_2018_41* 41_Oregon_$DIREXTENSION
+mv tl_2018_42* 42_Pennsylvania_$DIREXTENSION
+mv tl_2018_44* 44_Rhode_Island_$DIREXTENSION
+mv tl_2018_45* 45_South_Carolina_$DIREXTENSION
+mv tl_2018_46* 46_South_Dakota_$DIREXTENSION
+mv tl_2018_47* 47_Tennessee_$DIREXTENSION
+mv tl_2018_48* 48_Texas_$DIREXTENSION
+mv tl_2018_49* 49_Utah_$DIREXTENSION
+mv tl_2018_50* 50_Vermont_$DIREXTENSION
+mv tl_2018_51* 51_Virginia_$DIREXTENSION
+mv tl_2018_53* 53_Washington_$DIREXTENSION
+mv tl_2018_54* 54_West_Virginia_$DIREXTENSION
+mv tl_2018_55* 55_Wisconsin_$DIREXTENSION
+mv tl_2018_56* 56_Wyoming_$DIREXTENSION
+mv tl_2018_60* 60_American_Samoa_$DIREXTENSION
+mv tl_2018_64* 64_Federated_States_of_Micronesia_$DIREXTENSION
+mv tl_2018_66* 66_Guam_$DIREXTENSION
+mv tl_2018_68* 68_Marshall_Islands_$DIREXTENSION
+mv tl_2018_69* 69_Commonwealth_of_the_Northern_Mariana_Islands_$DIREXTENSION
+mv tl_2018_70* 70_Palau_$DIREXTENSION
+mv tl_2018_72* 72_Puerto_Rico_$DIREXTENSION
+mv tl_2018_74* 74_US_Minor_Outlying_Islands_$DIREXTENSION
+mv tl_2018_78* 78_US_Virgin_Islands_$DIREXTENSION
 
 # Prune any empty directories
 find . -type d -empty -exec rmdir {} \;
@@ -143,16 +143,16 @@ do
     cd $TDIR
     for foo in *.zip; do unzip -q $foo; done
     OUTPUTNAME=`basename $PWD`
-    doogr.sh ${OUTPUTNAME}.shp tl*.shp
+    $DOOGR ${OUTPUTNAME}.shp tl*.shp
     echo "Removing temporary files"
     rm tl*.!(zip)
     echo "Moving worked files"
     mv tl*.zip ..
     if [ "$DONESHPTOPGSQL" = "true" ]
     then
-        ${SHP2PGSQL} -s 4269 -a ??_*.shp $DIREXTENSION | ${PSQL} -d ${TIGERDB}
+        ${SHP2PGSQL} -s 4269 -a ??_*.shp $DIREXTENSION | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
     else
-        ${SHP2PGSQL} -s 4269 -c -I ??_*.shp $DIREXTENSION | ${PSQL} -d ${TIGERDB}
+        ${SHP2PGSQL} -s 4269 -c -I ??_*.shp $DIREXTENSION | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
         DONESHPTOPGSQL=true
     fi
     cd ..

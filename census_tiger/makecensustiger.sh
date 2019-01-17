@@ -5,16 +5,52 @@ shopt -s extglob
 #set -x #echo on for debugging (comment to disable)
 
 # Database to write to
-TIGERDB="tiger_2017"
+DBHOST=""
+DBPORT="5432"
+DBUSER=""
+TIGERDB=""
+
+# Don't whine to me about security, do it differently if you want
+export PGPASSWORD=""
+
+# Source directory
+BASEDIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Top level directory
 TOPDIR=$(pwd)
 
-# Change this if your shp2pgsql is somewhere else
+# Change these for your local system
 SHP2PGSQL="/usr/bin/shp2pgsql"
-
-# Change this if your psql is somewhere else
+WGET="/usr/bin/wget"
 PSQL="/usr/bin/psql -q"
+DOOGR="${BASEDIR}/doogr.sh"
+MAKESTATES="${BASEDIR}/makestates.sh"
+
+# Download all the files we need (this will take a while)
+#$WGET -r -P AIANNH -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/AIANNH
+#$WGET -r -P ANRC -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/ANRC
+#$WGET -r -P AREALM -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/AREALM
+#$WGET -r -P AREAWATER -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/AREAWATER
+#$WGET -r -P BG -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/BG
+#$WGET -r -P CD -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/CD
+#$WGET -r -P CONCITY -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/CONCITY
+#$WGET -r -P COUNTY -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/COUNTY
+#$WGET -r -P COUSUB -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/COUSUB
+#$WGET -r -P ELSD -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/ELSD
+#$WGET -r -P LINEARWATER -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/LINEARWATER
+#$WGET -r -P MIL -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/MIL
+#$WGET -r -P PLACE -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/PLACE
+#$WGET -r -P POINTLM -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/POINTLM
+#$WGET -r -P PRISECROADS -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/PRISECROADS
+#$WGET -r -P PUMA -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/PUMA
+#$WGET -r -P RAILS -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/RAILS
+#$WGET -r -P ROADS -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/ROADS
+#$WGET -r -P SCSD -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/SCSD
+#$WGET -r -P SLDL -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/SLDL
+#$WGET -r -P SLDU -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/SLDU
+#$WGET -r -P STATE -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/STATE
+#$WGET -r -P UNSD -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/UNSD
+#$WGET -r -P ZCTA5 -nH --cut-dirs=100 --inet4-only ftp://ftp2.census.gov/geo/tiger/TIGER2018/ZCTA5
 
 # *****************************************************************************
 # Process the American Indian / Alaska Native / Native Hawaiian Areas
@@ -24,13 +60,13 @@ cd AIANNH
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp american_indian_alaska_native_native_hawaiian_areas | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp american_indian_alaska_native_native_hawaiian_areas | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table american_indian_alaska_native_native_hawaiian_areas"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE american_indian_alaska_native_native_hawaiian_areas"
-$PSQL -d $TIGERDB -c "CLUSTER american_indian_alaska_native_native_hawaiian_areas USING american_indian_alaska_native_native_hawaiian_areas_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE american_indian_alaska_native_native_hawaiian_areas"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE american_indian_alaska_native_native_hawaiian_areas"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER american_indian_alaska_native_native_hawaiian_areas USING american_indian_alaska_native_native_hawaiian_areas_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE american_indian_alaska_native_native_hawaiian_areas"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -47,13 +83,13 @@ cd ANRC
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp alaska_native_regional_corporations | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp alaska_native_regional_corporations | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table alaska_native_regional_corporations"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE alaska_native_regional_corporations"
-$PSQL -d $TIGERDB -c "CLUSTER alaska_native_regional_corporations USING alaska_native_regional_corporations_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE alaska_native_regional_corporations"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE alaska_native_regional_corporations"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER alaska_native_regional_corporations USING alaska_native_regional_corporations_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE alaska_native_regional_corporations"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -73,16 +109,16 @@ echo "Creating the output directory"
 mkdir arealm
 cd arealm
 echo "Creating the country-level shapefile"
-. doogr.sh arealm.shp ../*.shp
+. $DOOGR arealm.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I arealm.shp area_landmarks | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I arealm.shp area_landmarks | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table area_landmarks"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE area_landmarks"
-$PSQL -d $TIGERDB -c "CLUSTER area_landmarks USING area_landmarks_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE area_landmarks"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE area_landmarks"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER area_landmarks USING area_landmarks_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE area_landmarks"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -96,13 +132,13 @@ cd $TOPDIR
 echo "****************************************************************************"
 echo "Now processing the Area Water table"
 cd AREAWATER
-. makestates.sh area_water
+. $MAKESTATES area_water
 
 # Optimize the DB
 echo "Optimizing the table area_water"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE area_water"
-$PSQL -d $TIGERDB -c "CLUSTER area_water USING area_water_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE area_water"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE area_water"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER area_water USING area_water_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE area_water"
 
 # Go back to our top level directory
 cd $TOPDIR
@@ -117,16 +153,16 @@ echo "Creating the output directory"
 mkdir bgroups
 cd bgroups
 echo "Creating the country-level shapefile"
-. doogr.sh bgroups.shp ../*.shp
+. $DOOGR bgroups.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I bgroups.shp block_groups | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I bgroups.shp block_groups | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table block_groups"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE block_groups"
-$PSQL -d $TIGERDB -c "CLUSTER block_groups USING block_groups_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE block_groups"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE block_groups"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER block_groups USING block_groups_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE block_groups"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -142,13 +178,13 @@ cd CD
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp congressional_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp congressional_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table congressional_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE congressional_districts"
-$PSQL -d $TIGERDB -c "CLUSTER congressional_districts USING congressional_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE congressional_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE congressional_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER congressional_districts USING congressional_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE congressional_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -168,16 +204,16 @@ echo "Creating the output directory"
 mkdir concity
 cd concity
 echo "Creating the country-level shapefile"
-. doogr.sh concity.shp ../*.shp
+. $DOOGR concity.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I concity.shp consolidated_cities | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I concity.shp consolidated_cities | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table consolidated_cities"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE consolidated_cities"
-$PSQL -d $TIGERDB -c "CLUSTER consolidated_cities USING consolidated_cities_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE consolidated_cities"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE consolidated_cities"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER consolidated_cities USING consolidated_cities_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE consolidated_cities"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -197,16 +233,16 @@ echo "Creating the output directory"
 mkdir cousub
 cd cousub
 echo "Creating the country-level shapefile"
-. doogr.sh cousub.shp ../*.shp
+. $DOOGR cousub.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I cousub.shp county_subdivisions | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I cousub.shp county_subdivisions | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table county_subdivisions"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE county_subdivisions"
-$PSQL -d $TIGERDB -c "CLUSTER county_subdivisions USING county_subdivisions_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE county_subdivisions"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE county_subdivisions"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER county_subdivisions USING county_subdivisions_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE county_subdivisions"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -226,16 +262,16 @@ echo "Creating the output directory"
 mkdir elsd
 cd elsd
 echo "Creating the country-level shapefile"
-. doogr.sh elsd.shp ../*.shp
+. $DOOGR elsd.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I elsd.shp elementary_school_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I elsd.shp elementary_school_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table elementary_school_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE elementary_school_districts"
-$PSQL -d $TIGERDB -c "CLUSTER elementary_school_districts USING elementary_school_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE elementary_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE elementary_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER elementary_school_districts USING elementary_school_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE elementary_school_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -249,13 +285,13 @@ cd $TOPDIR
 echo "****************************************************************************"
 echo "Now processing the Linear Water table"
 cd LINEARWATER
-. makestates.sh linear_water
+. $MAKESTATES linear_water
 
 # Optimize the DB
 echo "Optimizing the table linear_water"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE linear_water"
-$PSQL -d $TIGERDB -c "CLUSTER linear_water USING linear_water_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE linear_water"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE linear_water"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER linear_water USING linear_water_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE linear_water"
 
 # Go back to our top level directory
 cd $TOPDIR
@@ -268,13 +304,13 @@ cd MIL
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp military_installations | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp military_installations | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table military_installations"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE military_installations"
-$PSQL -d $TIGERDB -c "CLUSTER military_installations USING military_installations_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE military_installations"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE military_installations"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER military_installations USING military_installations_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE military_installations"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -294,16 +330,16 @@ echo "Creating the output directory"
 mkdir place
 cd place
 echo "Creating the country-level shapefile"
-. doogr.sh place.shp ../*.shp
+. $DOOGR place.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I place.shp places | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I place.shp places | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table places"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE places"
-$PSQL -d $TIGERDB -c "CLUSTER places USING places_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE places"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE places"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER places USING places_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE places"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -323,16 +359,16 @@ echo "Creating the output directory"
 mkdir pointlm
 cd pointlm
 echo "Creating the country-level shapefile"
-. doogr.sh pointlm.shp ../*.shp
+. $DOOGR pointlm.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I pointlm.shp point_landmarks | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I pointlm.shp point_landmarks | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table point_landmarks"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE point_landmarks"
-$PSQL -d $TIGERDB -c "CLUSTER point_landmarks USING point_landmarks_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE point_landmarks"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE point_landmarks"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER point_landmarks USING point_landmarks_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE point_landmarks"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -352,16 +388,16 @@ echo "Creating the output directory"
 mkdir prisecroads
 cd prisecroads
 echo "Creating the country-level shapefile"
-. doogr.sh prisecroads.shp ../*.shp
+. $DOOGR prisecroads.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I prisecroads.shp prisec_roads | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I prisecroads.shp prisec_roads | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table prisec_roads"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE prisec_roads"
-$PSQL -d $TIGERDB -c "CLUSTER prisec_roads USING prisec_roads_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE prisec_roads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE prisec_roads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER prisec_roads USING prisec_roads_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE prisec_roads"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -381,16 +417,16 @@ echo "Creating the output directory"
 mkdir puma
 cd puma
 echo "Creating the country-level shapefile"
-. doogr.sh puma.shp ../*.shp
+. $DOOGR puma.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I puma.shp public_use_microdata_areas | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I puma.shp public_use_microdata_areas | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table public_use_microdata_areas"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE public_use_microdata_areas"
-$PSQL -d $TIGERDB -c "CLUSTER public_use_microdata_areas USING public_use_microdata_areas_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE public_use_microdata_areas"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE public_use_microdata_areas"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER public_use_microdata_areas USING public_use_microdata_areas_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE public_use_microdata_areas"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -407,13 +443,13 @@ cd RAILS
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp railroads | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp railroads | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table railroads"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE railroads"
-$PSQL -d $TIGERDB -c "CLUSTER railroads USING railroads_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE railroads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE railroads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER railroads USING railroads_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE railroads"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -427,13 +463,13 @@ cd $TOPDIR
 echo "****************************************************************************"
 echo "Now processing the Roads table"
 cd ROADS
-. makestates.sh roads
+. $MAKESTATES roads
 
 # Optimize the DB
 echo "Optimizing the table roads"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE roads"
-$PSQL -d $TIGERDB -c "CLUSTER roads USING roads_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE roads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE roads"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER roads USING roads_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE roads"
 
 # Go back to our top level directory
 cd $TOPDIR
@@ -449,16 +485,16 @@ echo "Creating the output directory"
 mkdir scsd
 cd scsd
 echo "Creating the country-level shapefile"
-. doogr.sh scsd.shp ../*.shp
+. $DOOGR scsd.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I scsd.shp secondary_school_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I scsd.shp secondary_school_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table secondary_school_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE secondary_school_districts"
-$PSQL -d $TIGERDB -c "CLUSTER secondary_school_districts USING secondary_school_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE secondary_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE secondary_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER secondary_school_districts USING secondary_school_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE secondary_school_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -478,16 +514,16 @@ echo "Creating the output directory"
 mkdir sldl
 cd sldl
 echo "Creating the country-level shapefile"
-. doogr.sh sldl.shp ../*.shp
+. $DOOGR sldl.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I sldl.shp state_legislative_lower_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I sldl.shp state_legislative_lower_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table state_legislative_lower_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE state_legislative_lower_districts"
-$PSQL -d $TIGERDB -c "CLUSTER state_legislative_lower_districts USING state_legislative_lower_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE state_legislative_lower_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE state_legislative_lower_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER state_legislative_lower_districts USING state_legislative_lower_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE state_legislative_lower_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -507,16 +543,16 @@ echo "Creating the output directory"
 mkdir sldu
 cd sldu
 echo "Creating the country-level shapefile"
-. doogr.sh sldu.shp ../*.shp
+. $DOOGR sldu.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I sldu.shp state_legislative_upper_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I sldu.shp state_legislative_upper_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table state_legislative_upper_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE state_legislative_upper_districts"
-$PSQL -d $TIGERDB -c "CLUSTER state_legislative_upper_districts USING state_legislative_upper_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE state_legislative_upper_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE state_legislative_upper_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER state_legislative_upper_districts USING state_legislative_upper_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE state_legislative_upper_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -536,16 +572,16 @@ echo "Creating the output directory"
 mkdir unsd
 cd unsd
 echo "Creating the country-level shapefile"
-. doogr.sh unsd.shp ../*.shp
+. $DOOGR unsd.shp ../*.shp
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I unsd.shp unified_school_districts | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I unsd.shp unified_school_districts | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 cd ..
 
 # Optimize the DB
 echo "Optimizing the table unified_school_districts"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE unified_school_districts"
-$PSQL -d $TIGERDB -c "CLUSTER unified_school_districts USING unified_school_districts_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE unified_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE unified_school_districts"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER unified_school_districts USING unified_school_districts_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE unified_school_districts"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -562,13 +598,13 @@ cd ZCTA5
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp zip_codes | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp zip_codes | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table zip_codes"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE zip_codes"
-$PSQL -d $TIGERDB -c "CLUSTER zip_codes USING zip_codes_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE zip_codes"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE zip_codes"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER zip_codes USING zip_codes_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE zip_codes"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -585,13 +621,13 @@ cd COUNTY
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp county_boundaries | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp county_boundaries | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table county_boundaries"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE county_boundaries"
-$PSQL -d $TIGERDB -c "CLUSTER county_boundaries USING county_boundaries_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE county_boundaries"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE county_boundaries"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER county_boundaries USING county_boundaries_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE county_boundaries"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
@@ -608,13 +644,13 @@ cd STATE
 echo "Unzipping the files."
 for foo in *.zip; do unzip -q $foo; done
 echo "Running shp2pgsql"
-${SHP2PGSQL} -s 4269 -c -I tl*.shp state_boundaries | ${PSQL} -d ${TIGERDB}
+${SHP2PGSQL} -s 4269 -c -I tl*.shp state_boundaries | ${PSQL} --host=${DBHOST} --port=${DBPORT} --username=${DBUSER} --dbname=${TIGERDB}
 
 # Optimize the DB
 echo "Optimizing the table state_boundaries"
-$PSQL -d $TIGERDB -c "VACUUM ANALYZE state_boundaries"
-$PSQL -d $TIGERDB -c "CLUSTER state_boundaries USING state_boundaries_geom_idx"
-$PSQL -d $TIGERDB -c "ANALYZE state_boundaries"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "VACUUM ANALYZE state_boundaries"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "CLUSTER state_boundaries USING state_boundaries_geom_idx"
+$PSQL --host=$DBHOST --port=$DBPORT --username=$DBUSER --dbname=$TIGERDB -c "ANALYZE state_boundaries"
 
 # Clean up after ourselves
 echo "Cleaning up temporary files"
