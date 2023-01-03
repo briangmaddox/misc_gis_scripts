@@ -33,7 +33,10 @@ if __name__ == "__main__":
         csvoutfile.writeheader()
 
         for inrow in csvinfile:
-            if not us.states.lookup(inrow['STATE_ALPHA']):
+            try:
+                if not us.states.lookup(inrow['STATE_ALPHA']):
+                    continue
+            except Exception as e:
                 continue
             else:
                 csvoutfile.writerow(inrow)
