@@ -23,8 +23,8 @@ TOPDIR=$(pwd)
 SHP2PGSQL="/usr/bin/shp2pgsql"
 WGET="/usr/bin/wget"
 PSQL="/usr/bin/psql -q"
-DOOGR="${TOPDIR}/doogr.sh"
-MAKESTATES="${TOPDIR}/makestates.sh"
+DOOGR="${BASEDIR}/doogr.sh"
+MAKESTATES="${BASEDIR}/makestates.sh"
 
 
 # *****************************************************************************
