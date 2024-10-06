@@ -6,7 +6,7 @@ set -x #echo on for debugging (comment to disable)
 
 # Database and server information
 DBHOST=""
-DBPORT=""
+DBPORT="5432"
 DBUSER=""
 GEONAMESDB=""
 
@@ -22,23 +22,23 @@ PSQL="/usr/bin/psql -q"
 UNZIP="/usr/bin/unzip"
 
 # Download the files we need.
-$WGET http://download.geonames.org/export/dump/allCountries.zip
-$WGET http://download.geonames.org/export/dump/featureCodes_en.txt
-$WGET http://download.geonames.org/export/dump/alternateNames.zip
-$WGET http://download.geonames.org/export/dump/admin1CodesASCII.txt
-$WGET http://download.geonames.org/export/dump/admin2Codes.txt
-$WGET http://download.geonames.org/export/dump/adminCode5.zip
-$WGET http://download.geonames.org/export/dump/countryInfo.txt
-$WGET http://download.geonames.org/export/dump/hierarchy.zip
-$WGET http://download.geonames.org/export/dump/timeZones.txt
-$WGET http://download.geonames.org/export/dump/userTags.zip
-
+#$WGET http://download.geonames.org/export/dump/allCountries.zip
+#$WGET http://download.geonames.org/export/dump/featureCodes_en.txt
+#$WGET http://download.geonames.org/export/dump/alternateNames.zip
+#$WGET http://download.geonames.org/export/dump/admin1CodesASCII.txt
+#$WGET http://download.geonames.org/export/dump/admin2Codes.txt
+#$WGET http://download.geonames.org/export/dump/adminCode5.zip
+#$WGET http://download.geonames.org/export/dump/countryInfo.txt
+#$WGET http://download.geonames.org/export/dump/hierarchy.zip
+#$WGET http://download.geonames.org/export/dump/timeZones.txt
+#$WGET http://download.geonames.org/export/dump/userTags.zip
+#
 # Unzip them
-$UNZIP allCountries.zip
-$UNZIP alternateNames.zip
-$UNZIP adminCode5.zip
-$UNZIP hierarchy.zip
-$UNZIP userTags.zip
+#$UNZIP allCountries.zip
+#$UNZIP alternateNames.zip
+#$UNZIP adminCode5.zip
+#$UNZIP hierarchy.zip
+#$UNZIP userTags.zip
 
 # Make the tables
 $PSQL --host=$DBHOST --port=$DBPORT  --username=$DBUSER --dbname=$GEONAMESDB -f "$BASEDIR/create_tables.sql"
